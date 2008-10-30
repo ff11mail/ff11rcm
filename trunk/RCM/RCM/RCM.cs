@@ -1,4 +1,23 @@
-﻿using System;
+﻿/* RCM - Remote Command Manager for FFXI.
+ * Copyright (C) 2008 FFXI RCM Project <ff11rcm@gmail.com>
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,8 +36,8 @@ namespace RCM
         public SortedList WindowerPids = new SortedList();
         public Thread thread1;
         public Thread thread2;
-        public Windower.MainFunctions w1;
-        public Windower.MainFunctions w2;
+        public Windower w1;
+        public Windower w2;
 
         private RCMNetServer serv = null;
         private RCMNetClient client = null;
@@ -27,8 +46,6 @@ namespace RCM
         {
             InitializeComponent();
             ListWindowerProcess();
-            w1 = new Windower.MainFunctions();
-            w2 = new Windower.MainFunctions();
         }
 
         public void ListWindowerProcess()
@@ -49,12 +66,12 @@ namespace RCM
             comboBox3.SelectedIndex = 0;
         }
 
-        private string comRead(Windower.MainFunctions w)
+        private string comRead(Windower w)
         {
             string text = "";
             short count;
             string ret = string.Empty;
-            count = w.ConsoleGetArgCount();
+            count = w.ArgCount;
             text = w.ConsoleGetArg(0);
             if (text == "rcm")
             {
@@ -109,9 +126,9 @@ namespace RCM
             System.Diagnostics.Process p;
 
             p = (System.Diagnostics.Process)WindowerPids[comboBox1.SelectedItem];
-            w1.SetPID((uint)p.Id);
+            w1 = new Windower((uint)p.Id);
             p = (System.Diagnostics.Process)WindowerPids[comboBox2.SelectedItem];
-            w2.SetPID((uint)p.Id);
+            w2 = new Windower((uint)p.Id);
 
             ThreadStart t1 = new ThreadStart(comThread1);
             thread1 = new Thread(t1);
@@ -185,7 +202,7 @@ namespace RCM
             {
                 System.Diagnostics.Process p;
                 p = (System.Diagnostics.Process)WindowerPids[comboBox3.SelectedItem];
-                w1.SetPID((uint)p.Id);
+                w1 = new Windower((uint)p.Id);
                 button2.Text = "停止";
                 comboBox3.Enabled = false;
                 groupBox1.Enabled = false;
