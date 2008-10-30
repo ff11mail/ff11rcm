@@ -28,15 +28,15 @@ namespace FFXI
     public class Windower
     {
         // Private
-        private int ConsoleHelper;
-        private int TextHelper;
-        private int KeyboardHelper;
+        private int _ConsoleHelper;
+        private int _TextHelper;
+        private int _KeyboardHelper;
 
         // キーストロークのDOWN UPの間隔 (SendKey用)
         private int KeyPressDelay = 100;
 
         // Public
-        public uint mPid;
+        private uint _Pid;
 
         /// <summary>
         /// コンストラクタ
@@ -44,11 +44,11 @@ namespace FFXI
         /// <param name="pid">対象プロセスID</param>
         public Windower(uint pid)
         {
-            mPid = pid;
+            _Pid = pid;
 
-            ConsoleHelper = WindowerHelper.CreateConsoleHelper("WindowerMMFConsoleHandler_" + pid.ToString());
-            TextHelper = WindowerHelper.CreateTextHelper("WindowerMMFTextHandler_" + pid.ToString());
-            KeyboardHelper = WindowerHelper.CreateKeyboardHelper("WindowerMMFKeyboardHandler_" + pid.ToString());
+            _ConsoleHelper = WindowerHelper.CreateConsoleHelper("WindowerMMFConsoleHandler_" + pid.ToString());
+            _TextHelper = WindowerHelper.CreateTextHelper("WindowerMMFTextHandler_" + pid.ToString());
+            _KeyboardHelper = WindowerHelper.CreateKeyboardHelper("WindowerMMFKeyboardHandler_" + pid.ToString());
         }
 
         ~Windower()
@@ -58,10 +58,18 @@ namespace FFXI
 
         public void Dispose()
         {
-            WindowerHelper.DeleteConsoleHelper(ConsoleHelper);
-            WindowerHelper.DeleteTextHelper(TextHelper);
-            WindowerHelper.DeleteKeyboardHelper(KeyboardHelper);
-            mPid = 0;
+            WindowerHelper.DeleteConsoleHelper(_ConsoleHelper);
+            WindowerHelper.DeleteTextHelper(_TextHelper);
+            WindowerHelper.DeleteKeyboardHelper(_KeyboardHelper);
+            _Pid = 0;
+        }
+
+        /// <summary>
+        /// プロセスID
+        /// </summary>
+        public uint Pid
+        {
+            get { return _Pid; }
         }
 
         /// <summary>
@@ -69,7 +77,7 @@ namespace FFXI
         /// </summary>
         public bool IsNewCommand
         {
-            get { return WindowerHelper.CCHIsNewCommand(ConsoleHelper); }
+            get { return WindowerHelper.CCHIsNewCommand(_ConsoleHelper); }
         }
 
         /// <summary>
@@ -77,7 +85,7 @@ namespace FFXI
         /// </summary>
         public short ArgCount
         {
-            get { return WindowerHelper.CCHGetArgCount(ConsoleHelper); }
+            get { return WindowerHelper.CCHGetArgCount(_ConsoleHelper); }
         }
 
         /// <summary>
@@ -86,7 +94,7 @@ namespace FFXI
         /// <param name="text">テキスト</param>
         public void SendText(string text)
         {
-            WindowerHelper.CKHSendString(KeyboardHelper, text);
+            WindowerHelper.CKHSendString(_KeyboardHelper, text);
         }
 
         /// <summary>
@@ -95,7 +103,7 @@ namespace FFXI
         /// <param name="code">キーコード</param>
         public void SendKey(WindowerHelper.KeyCode code)
         {
-            WindowerHelper.CKHSetKey(KeyboardHelper, Convert.ToByte(code), true);
+            WindowerHelper.CKHSetKey(_KeyboardHelper, Convert.ToByte(code), true);
             Thread.Sleep(KeyPressDelay);
             WindowerHelper.CKHSetKey(KeyPressDelay, Convert.ToByte(code), false);
         }
@@ -109,7 +117,7 @@ namespace FFXI
         {
             byte[] buffer = new byte[256]; // いまのところ256バイトのみ
             // text = String.Format("{0:255}", " ");
-            WindowerHelper.CCHGetArg(ConsoleHelper, index, buffer);
+            WindowerHelper.CCHGetArg(_ConsoleHelper, index, buffer);
             var len = 0;
             for (var i = 0; i < buffer.Length; i++)
             {
