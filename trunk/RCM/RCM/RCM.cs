@@ -41,7 +41,7 @@ namespace RCM
 
         private RCMNetServer serv = null;
         private RCMNetClient client = null;
-        
+
         public RCM()
         {
             InitializeComponent();
