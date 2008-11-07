@@ -36,13 +36,13 @@ namespace FFXI
         private int KeyPressDelay = 100;
 
         // Public
-        private uint _Pid;
+        private int _Pid;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="pid">対象プロセスID</param>
-        public Windower(uint pid)
+        public Windower(int pid)
         {
             _Pid = pid;
 
@@ -67,7 +67,7 @@ namespace FFXI
         /// <summary>
         /// プロセスID
         /// </summary>
-        public uint Pid
+        public int Pid
         {
             get { return _Pid; }
         }
