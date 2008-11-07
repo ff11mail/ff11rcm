@@ -45,18 +45,29 @@ namespace FFXI.XIACE
     {
         private PolProcess pol;
         private PlayerStatus stat;
+        private eActivity act;
 
-        public Player(Process p)
+        public Player(Process proc)
         {
-            pol = new PolProcess(p, (int)OFFSET.PLAYER_INFO); // PlayerInfoの場所にアドレスをセット
+            pol = new PolProcess(proc); // PlayerInfoの場所にアドレスをセット
+            Read();
+        }
+
+        public Player(int pid)
+        {
+            Process proc = Process.GetProcessById(pid);
+            pol = new PolProcess(proc);
             Read();
         }
 
         unsafe private void Read()
         {
+            byte pAct;
             PlayerStatus status = new PlayerStatus();
-            MemoryProvider.ReadProcessMemory(pol.Handle, pol.Offset, &status, (uint)Marshal.SizeOf(stat), null);
+            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + OFFSET.PLAYER_INFO), &status, (uint)Marshal.SizeOf(stat), null);
             stat = status;
+            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + OFFSET.ACTIVITY_INFO), &pAct, 1, null);
+            act = (eActivity)pAct;
         }
 
         unsafe private void memcpy(byte * src, byte * dst, int len)
@@ -122,6 +133,14 @@ namespace FFXI.XIACE
             get
             {
                 Read(); return Convert.ToInt32(stat.MPP);
+            }
+        }
+
+        public eActivity Activity
+        {
+            get
+            {
+                Read(); return act;
             }
         }
 
