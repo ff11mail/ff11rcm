@@ -27,7 +27,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Collections;
 using System.Threading;
-using FFXI;
+using FFXI.XIACE;
 
 namespace RCM
 {
@@ -36,8 +36,8 @@ namespace RCM
         public SortedList WindowerPids = new SortedList();
         public Thread thread1;
         public Thread thread2;
-        public Windower w1;
-        public Windower w2;
+        public XIWindower w1;
+        public XIWindower w2;
 
         private RCMNetServer serv = null;
         private RCMNetClient client = null;
@@ -66,7 +66,7 @@ namespace RCM
             comboBox3.SelectedIndex = 0;
         }
 
-        private string comRead(Windower w)
+        private string comRead(XIWindower w)
         {
             string text = "";
             short count;
@@ -126,9 +126,9 @@ namespace RCM
             System.Diagnostics.Process p;
 
             p = (System.Diagnostics.Process)WindowerPids[comboBox1.SelectedItem];
-            w1 = new Windower((uint)p.Id);
+            w1 = new XIWindower(p.Id);
             p = (System.Diagnostics.Process)WindowerPids[comboBox2.SelectedItem];
-            w2 = new Windower((uint)p.Id);
+            w2 = new XIWindower(p.Id);
 
             ThreadStart t1 = new ThreadStart(comThread1);
             thread1 = new Thread(t1);
@@ -202,7 +202,7 @@ namespace RCM
             {
                 System.Diagnostics.Process p;
                 p = (System.Diagnostics.Process)WindowerPids[comboBox3.SelectedItem];
-                w1 = new Windower((uint)p.Id);
+                w1 = new XIWindower(p.Id);
                 button2.Text = "停止";
                 comboBox3.Enabled = false;
                 groupBox1.Enabled = false;
