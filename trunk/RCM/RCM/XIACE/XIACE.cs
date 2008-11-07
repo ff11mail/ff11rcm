@@ -29,19 +29,50 @@ using System.IO;
 namespace FFXI.XIACE
 {
     /// <summary>
+    /// 各種オフセット
+    /// </summary>
+    internal enum OFFSET
+    {
+        TARGET_INFO = 0x4d622c,
+        PLAYER_INFO = 0x8ccb6c, // 名前,HPMPTP,エリアなど
+        ACTIVITY_INFO = 0x536790  // 行動状態 enum Activity を参照
+    }
+
+    /// <summary>
+    /// 行動状態
+    /// </summary>
+    public enum eActivity : byte
+    {
+        Standing = 0,
+        Fighting = 1,
+        Dead1 = 2,
+        Dead2 = 3,
+        CutScene = 4,
+        Chocobo = 5,
+        Fishing = 6,
+        Healing = 33,
+        FishBite = 38,
+        Obtained = 39,
+        RodBreak = 40,
+        LineBreak = 41,
+        LostCatch = 43,
+        CatchMonster = 42,
+        Synthing = 44,
+        Sitting = 47
+    }
+
+    /// <summary>
     /// POL プロセス情報
     /// </summary>
     internal class PolProcess
     {
         private Process _Process;
         private IntPtr _BaseAddress;
-        private IntPtr _Offset;
 
         public IntPtr Handle { get { return _Process.Handle; } }
         public IntPtr BaseAddress { get { return _BaseAddress; } }
-        public IntPtr Offset { get { return _Offset; } }
 
-        public PolProcess(Process Proc, int offset)
+        public PolProcess(Process Proc)
         {
             _Process = Proc;
             foreach (ProcessModule m in Proc.Modules)
@@ -49,17 +80,10 @@ namespace FFXI.XIACE
                 if (m.ModuleName == "FFXiMain.dll")
                 {
                     _BaseAddress = m.BaseAddress;
-                    _Offset = (IntPtr)((int)_BaseAddress + offset);
                     break;
                 }
             }
         }        
-    }
-
-    internal enum OFFSET
-    {
-        TARGET_INFO = 0x4d622c,
-        PLAYER_INFO = 0x8ccb6c
     }
 
     /// <summary>
