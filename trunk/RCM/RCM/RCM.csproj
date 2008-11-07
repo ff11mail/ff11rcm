@@ -35,10 +35,12 @@
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Release\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -59,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="XIACE\Player.cs" />
+    <Compile Include="XIACE\XIWindower.cs" />
     <Compile Include="XIACE\XIACE.cs" />
     <Compile Include="RCM.cs">
       <SubType>Form</SubType>
