@@ -25,23 +25,63 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace FFXI.XIACE
 {
+    unsafe internal struct PlayerStatus
+    {
+        internal fixed byte name[20];
+        internal fixed byte unknown[12];
+        internal int HP;
+        internal int MP;
+        internal int TP;
+        internal byte HPP;
+        internal byte MPP;
+        internal byte Area;
+    }
+
     public class Player
     {
         private PolProcess pol;
+        private PlayerStatus stat;
 
         public Player(Process p)
         {
             pol = new PolProcess(p, (int)OFFSET.PLAYER_INFO); // PlayerInfoの場所にアドレスをセット
+            Read();
+        }
+
+        unsafe private void Read()
+        {
+            PlayerStatus status = new PlayerStatus();
+            MemoryProvider.ReadProcessMemory(pol.Handle, pol.Offset, &status, (uint)Marshal.SizeOf(stat), null);
+            stat = status;
+        }
+
+        unsafe private void memcpy(byte * src, byte * dst, int len)
+        {
+            while (len-- > 0)
+                *dst++ = *src++;        
+        }
+
+        unsafe private string ReadName()
+        {
+            int count = 20;
+            byte[] name = new byte[count];
+            Read();
+            fixed (byte* src = stat.name, dst = name)
+            {
+                memcpy(src, dst, count);
+            }
+            return Encoding.Default.GetString(name).Trim('\0');
         }
 
         public string Name
         {
             get
             {
-                return MemoryProvider.ReadMemoryString(pol.Handle, pol.Offset, 20);
+                return ReadName();
             }
         }
 
@@ -49,48 +89,47 @@ namespace FFXI.XIACE
         {
             get
             {
-                IntPtr offset = (IntPtr)((int)pol.Offset + 32);
-                return MemoryProvider.ReadMemoryInt32(pol.Handle, offset);
+                Read(); return stat.HP;
             }
         }
+
         public int MP
         {
             get
             {
-                IntPtr offset = (IntPtr)((int)pol.Offset + 36);
-                return MemoryProvider.ReadMemoryInt32(pol.Handle, offset);
+                Read(); return stat.MP;
             }
         }
+
         public int TP
         {
             get
             {
-                IntPtr offset = (IntPtr)((int)pol.Offset + 40);
-                return MemoryProvider.ReadMemoryInt32(pol.Handle, offset);
+                Read(); return stat.TP;
             }
         }
+
         public int HPP
         {
             get
             {
-                IntPtr offset = (IntPtr)((int)pol.Offset + 44);
-                return (int)MemoryProvider.ReadMemoryByte(pol.Handle, offset);
+                Read(); return Convert.ToInt32(stat.HPP);
             }
         }
+
         public int MPP
         {
             get
             {
-                IntPtr offset = (IntPtr)((int)pol.Offset + 45);
-                return (int)MemoryProvider.ReadMemoryByte(pol.Handle, offset);
+                Read(); return Convert.ToInt32(stat.MPP);
             }
         }
+
         public int Area
         {
             get
             {
-                IntPtr offset = (IntPtr)((int)pol.Offset + 46);
-                return (int)MemoryProvider.ReadMemoryByte(pol.Handle, offset);
+                Read(); return Convert.ToInt32(stat.Area);
             }
         }
 

@@ -68,15 +68,38 @@ namespace FFXI.XIACE
     internal static class MemoryProvider
     {
 
+        /// <summary>
+        /// ポインタ型をつかうunsafeメソッド : ポインタから配列に突っ込む(memcpy的な)ときにfixed ステートメントが必要
+        /// </summary>
+        /// <param name="handle"></param>
+        /// <param name="address"></param>
+        /// <param name="buffer"></param>
+        /// <param name="nBufferSize"></param>
+        /// <param name="len"></param>
+        /// <returns></returns>
         [DllImport("kernel32.dll")]
-        private extern static bool ReadProcessMemory(IntPtr handle, IntPtr addr, IntPtr OutputBuffer, UIntPtr nBufferSize, out UIntPtr lpNumberOfBytesRead);
+        unsafe public extern static bool ReadProcessMemory(IntPtr handle, IntPtr address,
+            void* buffer, uint nBufferSize, int* len);
 
-        private static IntPtr ReadProcessMemory(IntPtr Handle, IntPtr Address, uint nBytesToRead)
+        /// <summary>
+        /// ポインタ型を使わないメソッド : Marshal.PtrTo*をつかってがんばれ
+        /// </summary>
+        /// <param name="handle"></param>
+        /// <param name="addr"></param>
+        /// <param name="OutputBuffer"></param>
+        /// <param name="nBufferSize"></param>
+        /// <param name="lpNumberOfBytesRead"></param>
+        /// <returns></returns>
+        [DllImport("kernel32.dll", EntryPoint = "ReadProcessMemory")]
+        public extern static bool ReadProcessMemorySafe(IntPtr handle, IntPtr addr, IntPtr OutputBuffer, UIntPtr nBufferSize, out UIntPtr lpNumberOfBytesRead);
+
+
+        public static IntPtr ReadProcessMemorySafe(IntPtr Handle, IntPtr Address, uint nBytesToRead)
         {
             IntPtr Buffer = Marshal.AllocHGlobal((int)nBytesToRead);
             UIntPtr BytesRead = UIntPtr.Zero;
             UIntPtr BytesToRead = (UIntPtr)nBytesToRead;
-            if (!ReadProcessMemory(Handle, Address, Buffer, BytesToRead, out BytesRead))
+            if (!ReadProcessMemorySafe(Handle, Address, Buffer, BytesToRead, out BytesRead))
             {
                 return IntPtr.Zero;
             }
@@ -87,7 +110,7 @@ namespace FFXI.XIACE
         {
             IntPtr Buffer = IntPtr.Zero;
             string str = string.Empty;
-            Buffer = ReadProcessMemory(handle, addr, size);
+            Buffer = ReadProcessMemorySafe(handle, addr, size);
             try
             {
                 str = Marshal.PtrToStringAnsi(Buffer, (int)size);
@@ -104,7 +127,7 @@ namespace FFXI.XIACE
         {
             IntPtr Buffer = IntPtr.Zero;
             int i = 0;
-            Buffer = ReadProcessMemory(handle, addr, 4);
+            Buffer = ReadProcessMemorySafe(handle, addr, 4);
             try
             {
                 i = Marshal.ReadInt32(Buffer);
@@ -120,7 +143,7 @@ namespace FFXI.XIACE
         {
             IntPtr Buffer = IntPtr.Zero;
             short i = 0;
-            Buffer = ReadProcessMemory(handle, addr, 2);
+            Buffer = ReadProcessMemorySafe(handle, addr, 2);
             try
             {
                 i = Marshal.ReadInt16(Buffer);
@@ -136,7 +159,7 @@ namespace FFXI.XIACE
         {
             IntPtr Buffer = IntPtr.Zero;
             byte ret;
-            Buffer = ReadProcessMemory(handle, addr, 1);
+            Buffer = ReadProcessMemorySafe(handle, addr, 1);
             try
             {
                 ret = Marshal.ReadByte(Buffer);
