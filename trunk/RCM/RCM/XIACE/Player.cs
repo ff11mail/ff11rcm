@@ -21,6 +21,7 @@
  * Player - to get Player's (own) HP/HPP/MP/MPP/TP/Zone(Area) 
  */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,11 +42,20 @@ namespace FFXI.XIACE
         internal byte Area;
     }
 
+    unsafe internal struct Buffs
+    {
+        internal fixed short BuffArray[32];
+        internal fixed byte SelfCut[32];
+        internal fixed byte unknown[4];
+        internal short Count;
+    }
+
     public class Player
     {
         private PolProcess pol;
         private PlayerStatus stat;
         private eActivity act;
+        private Buffs buffs;
 
         public Player(Process proc)
         {
@@ -62,18 +72,35 @@ namespace FFXI.XIACE
 
         unsafe private void Read()
         {
-            byte pAct;
             PlayerStatus status = new PlayerStatus();
             MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + OFFSET.PLAYER_INFO), &status, (uint)Marshal.SizeOf(stat), null);
             stat = status;
+        }
+
+        unsafe private void ReadActivity()
+        {
+            byte pAct;
             MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + OFFSET.ACTIVITY_INFO), &pAct, 1, null);
             act = (eActivity)pAct;
         }
 
-        unsafe private void memcpy(byte * src, byte * dst, int len)
+        /// <summary>
+        /// ステータスエフェクトを取得(addr+644なんとかならんかな)
+        /// </summary>
+        unsafe private void ReadBuffs()
+        {
+            int addr;
+            Buffs b = new Buffs();
+
+            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + OFFSET.BUFFS_INFO), &addr, 4, null);
+            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)(addr+644), &b, (uint)Marshal.SizeOf(b), null);
+            buffs = b;
+        }
+
+        unsafe private void memcpy(byte* src, byte* dst, int len)
         {
             while (len-- > 0)
-                *dst++ = *src++;        
+                *dst++ = *src++;
         }
 
         unsafe private string ReadName()
@@ -140,7 +167,7 @@ namespace FFXI.XIACE
         {
             get
             {
-                Read(); return act;
+                ReadActivity(); return act;
             }
         }
 
@@ -158,6 +185,34 @@ namespace FFXI.XIACE
             {
                 return AreaToName(Area);
             }
+        }
+
+        unsafe public bool isBuffed(eBuff buff)
+        {
+            ReadBuffs();
+            fixed (short* ba = buffs.BuffArray)
+            {
+                for (short s = 0; s < buffs.Count; s++)
+                {
+                    if ((short)buff == ba[s])
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        unsafe public eBuff[] ListBuffs()
+        {            
+            ReadBuffs();
+            eBuff[] list = new eBuff[buffs.Count];
+            fixed (short* ba = buffs.BuffArray)
+            {
+                for (short s = 0; s < buffs.Count; s++)
+                {
+                    list[s] = (eBuff)ba[s];
+                }
+            }
+            return list;
         }
 
         #region "エリアIDからエリア名に変換"
