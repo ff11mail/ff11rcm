@@ -27,7 +27,8 @@ namespace FFXI.XIACE
         TARGET_INFO = 0x4d622c,
         PLAYER_INFO = 0x8ccb6c, // 名前,HPMPTP,エリアなど
         ACTIVITY_INFO = 0x536790,  // 行動状態 enum Activity を参照
-        BUFFS_INFO = 0x57d57c // 各種ステータス状態アイコン
+        BUFFS_INFO = 0x57d57c, // 各種ステータス状態アイコン
+        FISH_INFO = 0x3EAA64, // 釣り
     }
 
     /// <summary>
@@ -321,4 +322,12 @@ namespace FFXI.XIACE
         Seigan = 354
     }
     #endregion
+
+    public enum eRodPosition : short
+    {
+        Error = 0,
+        Center = 1,
+        Left = 2,
+        Right = 3
+    }
 }
