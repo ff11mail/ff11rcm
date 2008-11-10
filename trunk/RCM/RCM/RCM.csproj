@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="XIACE\enums.cs" />
+    <Compile Include="XIACE\Fishing.cs" />
     <Compile Include="XIACE\Player.cs" />
     <Compile Include="XIACE\XIWindower.cs" />
     <Compile Include="XIACE\XIACE.cs" />
