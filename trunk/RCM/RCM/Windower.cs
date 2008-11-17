@@ -35,7 +35,7 @@ namespace FFXI
         // キーストロークのDOWN UPの間隔 (SendKey用)
         private int KeyPressDelay = 100;
 
-        // Public
+        // 
         private int _Pid;
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace FFXI
         {
             WindowerHelper.CKHSetKey(_KeyboardHelper, Convert.ToByte(code), true);
             Thread.Sleep(KeyPressDelay);
-            WindowerHelper.CKHSetKey(KeyPressDelay, Convert.ToByte(code), false);
+            WindowerHelper.CKHSetKey(_KeyboardHelper, Convert.ToByte(code), false);
         }
 
         /// <summary>
