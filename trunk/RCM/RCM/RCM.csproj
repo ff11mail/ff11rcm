@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="XIACE\enums.cs" />
     <Compile Include="XIACE\Fishing.cs" />
+    <Compile Include="XIACE\Inventory.cs" />
     <Compile Include="XIACE\Player.cs" />
     <Compile Include="XIACE\XIWindower.cs" />
     <Compile Include="XIACE\XIACE.cs" />
@@ -96,8 +97,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="RCMNet.cs" />
-    <Compile Include="Windower.cs" />
-    <Compile Include="WindowerHelper.cs" />
+    <Compile Include="XIACE\Windower.cs" />
+    <Compile Include="XIACE\WindowerHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

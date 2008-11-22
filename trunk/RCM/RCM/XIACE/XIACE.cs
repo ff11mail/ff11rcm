@@ -161,5 +161,11 @@ namespace FFXI.XIACE
             }
             return ret;
         }
+
+        unsafe public static void memcpy(byte* src, byte* dst, int len)
+        {
+            while (len-- > 0)
+                *dst++ = *src++;
+        }
     }
 }

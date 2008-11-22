@@ -97,12 +97,6 @@ namespace FFXI.XIACE
             buffs = b;
         }
 
-        unsafe private void memcpy(byte* src, byte* dst, int len)
-        {
-            while (len-- > 0)
-                *dst++ = *src++;
-        }
-
         unsafe private string ReadName()
         {
             int count = 20;
@@ -110,7 +104,7 @@ namespace FFXI.XIACE
             Read();
             fixed (byte* src = stat.name, dst = name)
             {
-                memcpy(src, dst, count);
+                MemoryProvider.memcpy(src, dst, count);
             }
             return Encoding.Default.GetString(name).Trim('\0');
         }

@@ -22,13 +22,20 @@ namespace FFXI.XIACE
     /// <summary>
     /// 各種オフセット
     /// </summary>
-    internal enum OFFSET
+    internal enum OFFSET : int
     {
         TARGET_INFO = 0x4d622c,
         PLAYER_INFO = 0x8ccb6c, // 名前,HPMPTP,エリアなど
         ACTIVITY_INFO = 0x536790,  // 行動状態 enum Activity を参照
         BUFFS_INFO = 0x57d57c, // 各種ステータス状態アイコン
         FISH_INFO = 0x3EAA64, // 釣り
+        EQUIP_INFO = 0x8d30e8, // 装備
+        INVENTORY_INFO = 0x8ce450, // かばん
+        SAFEBOX_INFO = 0x8cf23c, // 金庫
+        STORAGE_INFO = 0x8d0028, // 収納
+        LOCKER_INFO = 0x8d1c00, // ロッカー
+        ITEM_INFO = 0x526820, // アイテム
+        INVENTORY_COUNT = 0x577CF0, // アイテム所持数 (+ 0x52 size 1) 
     }
 
     /// <summary>
@@ -329,5 +336,25 @@ namespace FFXI.XIACE
         Center = 1,
         Left = 2,
         Right = 3
+    }
+
+    public enum eEquipSlot : short
+    {
+        Main = 0,
+        Shield = 1,
+        Range = 2,
+        Ammo = 3,
+        Head = 4,
+        Body = 5,
+        Hands = 6,
+        Legs = 7,
+        Feet = 8,
+        Neck = 9,
+        Waist = 10,
+        EarLeft = 11,
+        EarRight = 12,
+        RingLeft = 13,
+        RingRight = 14,
+        Back = 15
     }
 }
