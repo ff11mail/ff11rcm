@@ -183,7 +183,7 @@ namespace FFXI.XIACE
         }
 
         /// <summary>
-        /// カバンアイテム数の取得 : リアルタイムじゃない可能性あり
+        /// カバンアイテム数の取得
         /// </summary>
         /// <returns></returns>
         unsafe public byte GetInventoryCount()
@@ -191,8 +191,48 @@ namespace FFXI.XIACE
             int ptr;
             byte count;
             MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + OFFSET.INVENTORY_COUNT), &ptr, 4, null);
-            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)(ptr + 0x52), &count, 1, null);
+            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)(ptr + 0x20), &count, 1, null);
             return (byte)(count - 1);
+        }
+
+        unsafe private byte GetMaxCount(int offset)
+        {
+            byte count;
+            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)offset, &count, 1, null);
+            return (byte)(count - 1);        	
+        }
+
+        /// <summary>
+        /// カバンアイテム最大数の取得
+        /// </summary>
+        /// <returns></returns>
+        public byte GetInventoryMax()
+        {
+        	return GetMaxCount((int)pol.BaseAddress + (int)OFFSET.INVENTORY_MAX);
+        }
+        /// <summary>
+        /// 金庫最大
+        /// </summary>
+        /// <returns></returns>
+        public byte GetSafeboxMax()
+        {
+            return GetMaxCount((int)pol.BaseAddress + (int)OFFSET.INVENTORY_MAX + 1);
+        }
+        /// <summary>
+        /// 収納最大
+        /// </summary>
+        /// <returns></returns>
+        public byte GetStorageMax()
+        {
+            return GetMaxCount((int)pol.BaseAddress + (int)OFFSET.INVENTORY_MAX + 2);
+        }
+        /// <summary>
+        /// ロッカー最大
+        /// </summary>
+        /// <returns></returns>
+        public byte GetLockerMax()
+        {
+            return GetMaxCount((int)pol.BaseAddress + (int)OFFSET.INVENTORY_MAX + 4);
         }
 
         /// <summary>

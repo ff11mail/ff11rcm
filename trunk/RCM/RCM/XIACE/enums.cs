@@ -35,7 +35,8 @@ namespace FFXI.XIACE
         STORAGE_INFO = 0x8d0028, // 収納
         LOCKER_INFO = 0x8d1c00, // ロッカー
         ITEM_INFO = 0x526820, // アイテム
-        INVENTORY_COUNT = 0x577CF0, // アイテム所持数 (+ 0x52 size 1) 
+        INVENTORY_COUNT = 0x57d350, // カバン所持数 (+ 0x20 size 1)
+        INVENTORY_MAX = 0x8d2f51, // カバンMAX
     }
 
     /// <summary>
