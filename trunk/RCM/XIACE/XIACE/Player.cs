@@ -42,6 +42,12 @@ namespace FFXI.XIACE
         internal byte Area;
     }
 
+    unsafe internal struct Max
+    {
+        internal int HP;
+        internal int MP;
+    }
+
     unsafe internal struct Buffs
     {
         internal fixed short BuffArray[32];
@@ -54,6 +60,7 @@ namespace FFXI.XIACE
     {
         private PolProcess pol;
         private PlayerStatus stat;
+        private Max max;
         private eActivity act;
         private Buffs buffs;
 
@@ -75,6 +82,13 @@ namespace FFXI.XIACE
             PlayerStatus status = new PlayerStatus();
             MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + OFFSET.PLAYER_INFO), &status, (uint)Marshal.SizeOf(stat), null);
             stat = status;
+        }
+
+        unsafe private void ReadMax()
+        {
+            Max maxstat = new Max();
+            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + OFFSET.MAXHPMP_INFO), &maxstat, (uint)Marshal.SizeOf(maxstat), null);
+            max = maxstat;
         }
 
         unsafe private void ReadActivity()
@@ -125,11 +139,29 @@ namespace FFXI.XIACE
             }
         }
 
+        public int HPMax
+        {
+            get
+            {
+                ReadMax();
+                return max.HP;
+            }
+        }
+
         public int MP
         {
             get
             {
                 Read(); return stat.MP;
+            }
+        }
+
+        public int MPMax
+        {
+            get
+            {
+                ReadMax();
+                return max.MP;
             }
         }
 

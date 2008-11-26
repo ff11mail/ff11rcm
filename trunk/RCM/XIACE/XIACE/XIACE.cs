@@ -167,5 +167,6 @@ namespace FFXI.XIACE
             while (len-- > 0)
                 *dst++ = *src++;
         }
+
     }
 }
