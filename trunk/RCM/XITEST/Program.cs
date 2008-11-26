@@ -61,7 +61,7 @@ namespace XITEST
                 string name;
                 Inventory.InventoryItem item = inventory.GetInventoryItem(i);
                 name = inventory.GetItemNameById(item.id);
-                Console.WriteLine(" {0,2:D2} {1:X4} {2} x{3}", i, item.order, (int)item.id, String.IsNullOrEmpty(name) ? "EMPTY" : name, item.count);
+                Console.WriteLine(" {0,2:D2} {1:X4} {2} x{3}", i, (int)item.id, String.IsNullOrEmpty(name) ? "EMPTY" : name, item.count);
             }
             Pause();
             Console.WriteLine("Safebox: {0}", inventory.GetSafeboxMax());
