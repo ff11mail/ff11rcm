@@ -47,14 +47,14 @@ namespace FFXI.XIACE
         internal int HP;
         internal int MP;
     }
-
+    /*
     unsafe internal struct Buffs
     {
         internal fixed short BuffArray[32];
         internal fixed byte SelfCut[32];
         internal fixed byte unknown[4];
         internal short Count;
-    }
+    }*/
 
     public class Player
     {
@@ -62,7 +62,7 @@ namespace FFXI.XIACE
         private PlayerStatus stat;
         private Max max;
         private eActivity act;
-        private Buffs buffs;
+        private short[] buffs = new short[32];
 
         public Player(Process proc)
         {
@@ -104,11 +104,12 @@ namespace FFXI.XIACE
         unsafe private void ReadBuffs()
         {
             int addr;
-            Buffs b = new Buffs();
-
-            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + OFFSET.BUFFS_INFO), &addr, 4, null);
-            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)(addr+644), &b, (uint)Marshal.SizeOf(b), null);
-            buffs = b;
+            // Buffs b = new Buffs();
+            fixed (short* b = buffs)
+            {                
+                MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + OFFSET.BUFFS_INFO), &addr, 4, null);
+                MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)(addr), b, 64, null);
+            }
         }
 
         unsafe private string ReadName()
@@ -216,12 +217,14 @@ namespace FFXI.XIACE
         unsafe public bool isBuffed(eBuff buff)
         {
             ReadBuffs();
-            fixed (short* ba = buffs.BuffArray)
+            fixed (short* ba = buffs)
             {
-                for (short s = 0; s < buffs.Count; s++)
+                for (short s = 0; s < 32; s++)
                 {
                     if ((short)buff == ba[s])
                         return true;
+                    if (ba[s] < 0)
+                        break;
                 }
             }
             return false;
@@ -230,12 +233,17 @@ namespace FFXI.XIACE
         unsafe public eBuff[] ListBuffs()
         {            
             ReadBuffs();
-            eBuff[] list = new eBuff[buffs.Count];
-            fixed (short* ba = buffs.BuffArray)
+            eBuff[] list = new eBuff[32];
+            fixed (short* ba = buffs)
             {
-                for (short s = 0; s < buffs.Count; s++)
+                for (short s = 0; s < 32; s++)
                 {
-                    list[s] = (eBuff)ba[s];
+                    if (ba[s] >= 0) list[s] = (eBuff)ba[s];
+                    else
+                    {
+                        list[s] = eBuff.Undefined;
+                        break;
+                    }
                 }
             }
             return list;
