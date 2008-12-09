@@ -119,6 +119,20 @@ namespace XITEST
             Console.WriteLine();
         }
 
+        static void CheckBuffs(Player player)
+        {
+            int c = 0;
+            Console.WriteLine("== Checking Buffs ==");
+            Console.Write("List Buffs:");
+            foreach (eBuff b in player.ListBuffs())
+            {
+                if (b == eBuff.Undefined) break;
+                Console.Write("{0} ", b);
+                c++;
+            }
+            Console.WriteLine("({0} buffs)", c);
+        }
+
         static void Main(string[] args)
         {
             Process p = CheckFFXIRunning();
@@ -137,6 +151,8 @@ namespace XITEST
                 Finish("WindowerHelper.dll がないかも");
             }
             CheckPlayer(xiw.Player);
+            Pause();
+            CheckBuffs(xiw.Player);
             Pause();
             CheckEquipment(xiw.Inventory);
             Pause();
