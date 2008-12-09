@@ -53,12 +53,12 @@ namespace FFXI.XIACE
         /// </summary>
         /// <param name="slot">装備スロット</param>
         /// <returns>位置</returns>
-        unsafe private byte GetEquipItemPos(eEquipSlot slot)
+        unsafe private int GetEquipItemPos(eEquipSlot slot)
         {
-            byte pos;
+            int pos;
             int off = (int)OFFSET.EQUIP_INFO + ((int)slot * 8) + 4;
-            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + off), &pos, 1, null);
-            return pos;
+            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + off), &pos, 4, null);
+            return (pos - 1);
         }
 
         /// <summary>
@@ -161,9 +161,9 @@ namespace FFXI.XIACE
         /// <returns></returns>
         public string GetEquippedItemName(eEquipSlot slot)
         {
-            byte pos = GetEquipItemPos(slot);
-            if ((pos) == 0) return "";
-            InventoryItem item = _GetInventoryItem(pos, OFFSET.INVENTORY_INFO);
+            int pos = GetEquipItemPos(slot);
+            if (pos < 0) return "";
+            InventoryItem item = _GetInventoryItem((short)pos, OFFSET.INVENTORY_INFO);
             if (item.id == 0) return "";
             return GetItemNameById(item.id);
         }
@@ -175,9 +175,9 @@ namespace FFXI.XIACE
         /// <returns></returns>
         public byte GetEquippedItemCount(eEquipSlot slot)
         {
-            byte pos = GetEquipItemPos(slot);
-            if ((pos) == 0) return (byte)0;
-            InventoryItem item = _GetInventoryItem(pos, OFFSET.INVENTORY_INFO);
+            int pos = GetEquipItemPos(slot);
+            if ((pos) < 0) return (byte)0;
+            InventoryItem item = _GetInventoryItem((short)pos, OFFSET.INVENTORY_INFO);
             if (item.id == 0) return (byte)0;
             return (byte)item.count;
         }
@@ -199,7 +199,7 @@ namespace FFXI.XIACE
         {
             byte count;
             MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)offset, &count, 1, null);
-            return (byte)(count - 1);        	
+            return (byte)(count-1);        	
         }
 
         /// <summary>
