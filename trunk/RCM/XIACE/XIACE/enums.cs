@@ -24,20 +24,20 @@ namespace FFXI.XIACE
     /// </summary>
     internal enum OFFSET : int
     {
-        TARGET_INFO = 0x4d622c,
-        PLAYER_INFO = 0x8ccb6c, // 名前,HPMPTP,エリアなど
-        MAXHPMP_INFO = 0x3e8468, // なんか適当
-        ACTIVITY_INFO = 0x536790,  // 行動状態 enum Activity を参照
+        TARGET_INFO = 0x4d622c,  // 
+        PLAYER_INFO = 0x8d02ec, // 名前,HPMPTP,エリアなど (FIX: 2008.12.09)
+        MAXHPMP_INFO = 0x3ebb70, // なんか適当 (FIX: 2008.12.09)
+        ACTIVITY_INFO = 0x539d00,  // 行動状態 enum Activity を参照 (FIX: 2008.12.09)
         BUFFS_INFO = 0x57d57c, // 各種ステータス状態アイコン
-        FISH_INFO = 0x3EAA64, // 釣り
-        EQUIP_INFO = 0x8d30e8, // 装備
-        INVENTORY_INFO = 0x8ce450, // かばん
-        SAFEBOX_INFO = 0x8cf23c, // 金庫
-        STORAGE_INFO = 0x8d0028, // 収納
-        LOCKER_INFO = 0x8d1c00, // ロッカー
-        ITEM_INFO = 0x526820, // アイテム
-        INVENTORY_COUNT = 0x57d350, // カバン所持数 (+ 0x20 size 1)
-        INVENTORY_MAX = 0x8d2f51, // カバンMAX
+        FISH_INFO = 0x3ee168, // 釣り(uncomfirmed FIX: 2008.12.09)
+        EQUIP_INFO = 0x8d6868, // 装備 (FIX: 2008.12.09)
+        INVENTORY_INFO = 0x8d1bd0, // かばん (FIX: 2008.12.09)
+        SAFEBOX_INFO = 0x8d29bc, // 金庫 (FIX: 2008.12.09)
+        STORAGE_INFO = 0x8d37a8, // 収納 (FIX: 2008.12.09)
+        LOCKER_INFO = 0x8d5380, // ロッカー (FIX: 2008.12.09)
+        ITEM_INFO = 0x529d90, // アイテム (FIX: 2008.12.09)
+        INVENTORY_COUNT = 0x580ae0, // カバン所持数 (+ 0x20 size 1) (maybe FIX: 2008.12.09)
+        INVENTORY_MAX = 0x8d66d1, // カバンMAX (maybe FIX: 2008.12.09)
     }
 
     /// <summary>
@@ -343,7 +343,7 @@ namespace FFXI.XIACE
     public enum eEquipSlot : short
     {
         Main = 0,
-        Shield = 1,
+        Sub = 1,
         Range = 2,
         Ammo = 3,
         Head = 4,
