@@ -28,7 +28,7 @@ namespace FFXI.XIACE
         PLAYER_INFO = 0x8d02ec, // 名前,HPMPTP,エリアなど (FIX: 2008.12.09)
         MAXHPMP_INFO = 0x3ebb70, // なんか適当 (FIX: 2008.12.09)
         ACTIVITY_INFO = 0x539d00,  // 行動状態 enum Activity を参照 (FIX: 2008.12.09)
-        BUFFS_INFO = 0x84b1b, // 各種ステータス状態アイコン
+        BUFFS_INFO = 0x84b1b, // 各種ステータス状態アイコン (FIX: 2008.12.09)
         FISH_INFO = 0x3ee168, // 釣り(uncomfirmed FIX: 2008.12.09)
         EQUIP_INFO = 0x8d6868, // 装備 (FIX: 2008.12.09)
         INVENTORY_INFO = 0x8d1bd0, // かばん (FIX: 2008.12.09)
