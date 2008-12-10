@@ -47,6 +47,8 @@ namespace XITEST
         {
             Console.WriteLine("== Checking Player Class ==");
             Console.WriteLine("Name: {0}", player.Name);
+            Console.WriteLine("Job: {0}{1}/{2}{3}", player.MainJob, player.MainJobLevel, player.SubJob, player.SubJobLevel);
+            Console.WriteLine("Exp: {0:N0}/{1:N0}", player.Exp, player.ExpNext);
             Console.WriteLine("HP: {0}/{1} ({2}%)", player.HP, player.HPMax, player.HPP);
             Console.WriteLine("MP: {0}/{1} ({2}%)", player.MP, player.MPMax, player.MPP);
             Console.WriteLine("TP: {0}%", player.TP);
@@ -131,6 +133,7 @@ namespace XITEST
                 c++;
             }
             Console.WriteLine("({0} buffs)", c);
+            Console.WriteLine();
         }
 
         static void Main(string[] args)
