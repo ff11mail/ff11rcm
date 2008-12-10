@@ -24,8 +24,9 @@ namespace FFXI.XIACE
     /// </summary>
     internal enum OFFSET : int
     {
-        TARGET_INFO = 0x4d622c,  // 
+        TARGET_INFO = 0x4d992c,  // 
         PLAYER_INFO = 0x8d02ec, // 名前,HPMPTP,エリアなど (FIX: 2008.12.09)
+        JOB_INFO = 0x3ebb78, // ジョブ情報(ADD: 2008.12.10)
         MAXHPMP_INFO = 0x3ebb70, // なんか適当 (FIX: 2008.12.09)
         ACTIVITY_INFO = 0x539d00,  // 行動状態 enum Activity を参照 (FIX: 2008.12.09)
         BUFFS_INFO = 0x84b1b, // 各種ステータス状態アイコン (FIX: 2008.12.09)
@@ -359,5 +360,30 @@ namespace FFXI.XIACE
         RingLeft = 13,
         RingRight = 14,
         Back = 15
+    }
+
+    public enum eJob : byte
+    {
+        NA = 0,
+        WAR = 1,
+        MNK = 2,
+        WHM = 3,
+        BLM = 4,
+        RDM = 5,
+        THF = 6,
+        PLD = 7,
+        DRK = 8,
+        BST = 9,
+        BRD = 10,
+        RNG = 11,
+        SAM = 12,
+        NIN = 13,
+        DRG = 14,
+        SMN = 15,
+        BLU = 16,
+        COR = 17,
+        PUP = 18,
+        DNC = 19,
+        SCH = 20
     }
 }
