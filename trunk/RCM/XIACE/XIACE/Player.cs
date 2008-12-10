@@ -47,14 +47,16 @@ namespace FFXI.XIACE
         internal int HP;
         internal int MP;
     }
-    /*
-    unsafe internal struct Buffs
+
+    unsafe internal struct JobInfo
     {
-        internal fixed short BuffArray[32];
-        internal fixed byte SelfCut[32];
-        internal fixed byte unknown[4];
-        internal short Count;
-    }*/
+        internal byte Main;
+        internal byte MainLv;
+        internal byte Sub;
+        internal byte SubLv;
+        internal ushort Exp;
+        internal ushort ExpNext;
+    }
 
     public class Player
     {
@@ -63,6 +65,7 @@ namespace FFXI.XIACE
         private Max max;
         private eActivity act;
         private short[] buffs = new short[32];
+        private JobInfo job;
 
         public Player(Process proc)
         {
@@ -122,6 +125,13 @@ namespace FFXI.XIACE
                 MemoryProvider.memcpy(src, dst, count);
             }
             return Encoding.Default.GetString(name).Trim('\0');
+        }
+
+        unsafe private void ReadJob()
+        {
+            JobInfo ji = new JobInfo();
+            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + (int)OFFSET.JOB_INFO), &ji, 8, null);
+            job = ji;
         }
 
         public string Name
@@ -214,6 +224,53 @@ namespace FFXI.XIACE
             }
         }
 
+        public eJob MainJob
+        {
+            get
+            {
+                ReadJob(); return (eJob)job.Main;
+            }
+        }
+
+        public byte MainJobLevel
+        {
+            get
+            {
+                ReadJob(); return job.MainLv;
+            }
+        }
+
+        public eJob SubJob
+        {
+            get
+            {
+                ReadJob(); return (eJob)job.Sub;
+            }
+        }
+
+        public byte SubJobLevel
+        {
+            get
+            {
+                ReadJob(); return job.SubLv;
+            }
+        }
+
+        public ushort Exp
+        {
+            get
+            {
+                ReadJob(); return job.Exp;
+            }
+        }
+
+        public ushort ExpNext
+        {
+            get
+            {
+                ReadJob(); return job.ExpNext;
+            }
+        }
         unsafe public bool isBuffed(eBuff buff)
         {
             ReadBuffs();
