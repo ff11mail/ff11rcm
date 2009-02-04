@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<spellcast>
+  <config
+     Debug="false"
+     HideErrors="false"
+     ShowGearSwaps="false"
+     ShowSpellInfo="false"
+     />
+   <sets>
+    <group name="DRG" default="true">
+      <set name="Standard">
+	<main lock="t">クレティネ</main>
+	<sub lock="t">ポールグリップ</sub>
+	<range lock="t" />
+	<ammo lock="t" />
+	<head>アスカルツッケット</head>
+	<neck>剣侠の首鎖</neck>
+	<rear>武士の耳</rear>
+	<lear>ブルタルピアス</lear>
+	<body>アスカルコラジン</body>
+	<hands>ホマムマノポラ</hands>
+	<rring>ラジャスリング</rring>
+	<lring>エクフォリアリング</lring>
+	<back>フォーレージマント</back>
+	<waist>スウィフトベルト</waist>
+	<legs>ホマムコッシャレ</legs>
+	<feet>ホマムガンビエラ</feet>
+      </set>
+
+    <set name="WS" baseset="Standard">
+      <head>ボイジャーサリット</head>
+      <rring>ラジャスリング</rring>
+      <lring>フレイムリング</lring>
+      <waist>ウォーウルフベルト</waist>
+      <legs>オーラムクウィス</legs>
+      <feet>ストームガンビエラ</feet>
+    </set>
+
+    </group>
+  </sets>
+
+  <rules group="DRG">
+
+    <if type="WeaponSkill" NotTPLT="100">
+      <action type="aftercastdelay" delay="5" />
+      <if spell="Wheeling Thrust|Skewer">
+	<action type="equip" when="precast" set="WS">
+	  <neck>ライトゴルゲット</neck>
+	</action>
+      </if>
+      <elseif spell="Penta Thrust">
+	<action type="equip" when="precast" set="WS">
+	  <neck>剣侠の首鎖</neck>
+	</action>
+      </elseif>
+      <else>
+	<action type="equip" when="precast" set="WS" />
+      </else>
+      <action type="equip" when="aftercast" set="Standard" />
+    </if>
+
+    <if spell="Jump|*Jump">
+      <action type="equip" when="precast">
+       <feet>ドラケングリーヴ</feet>
+       <legs>バローネコッシャレ</legs>
+     </action>
+     <action type="equip" when="aftercast" set="Standard" />
+    </if>
+
+    <if CommandPrefix="/magic">
+      <action type="equip" when="precast">
+        <head>ドラケンアーメット</head>
+      </action>
+      <action type="equip" when="aftercast">
+        <head>ウィルムアーメット</head>
+      </action>
+      <action type="aftercastdelay" delay="0.5" />
+      <action type="command" when="aftercast">wait 4.5;sc set Standard</action>
+    </if>
+
+    <if Spell="*: Ichi">
+      <action type="equip" when="precast"><lear>ロケイシャスピアス</lear></action>
+      <action type="equip" when="aftercast"><lear>ブルタルピアス</lear></action>
+    </if>
+
+    <if BuffActive="Copy Image" Spell="Utsusemi: Ichi"
+	advanced='(("%SubJobLVL">="37" AND "%SubJob"=="NIN") OR ("%MainJobLVL">="37" AND "%MainJob"=="NIN"))'>
+      <if advanced='("%MainJob" != "RDM" AND "%SubJob" != "RDM")'>
+	<action type="midcastdelay" delay="3.5" />
+      </if>
+      <else>
+	<action type="midcastdelay" delay="2.5" />
+      </else>
+      <action type="Command" when="midcast">cancel 66</action>
+    </if>
+
+    <if Spell="Monomi: Ichi">
+      <action type="midcastdelay" delay="2.8" />
+      <action type="Command" when="midcast">cancel 71</action>
+    </if>
+  </rules>
+</spellcast>
