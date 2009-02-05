@@ -30,7 +30,8 @@ namespace JPIDConv
 {
     public class Converter
     {
-        private string path;
+        private string CurrentPath;
+        private bool isFFXIInstalled = true;
 
         /// <summary>
         /// DAT読み込み
@@ -41,9 +42,10 @@ namespace JPIDConv
         /// <param name="increv">逆引きテーブルを追加するかどうか</param>
         private void loadDat(Hashtable table, byte rom, byte file_id, bool increv)
         {
-            string cache_name = path + String.Format("\\cache_{0}_{1}.txt",  rom, file_id);
-            string fileName = PlayOnline.FFXI.FFXI.GetFilePath(0, rom, file_id); 
+            string cache_name = CurrentPath + String.Format("\\cache_{0}_{1}.txt",  rom, file_id);
+            string fileName = String.Empty;
             StreamReader sr;
+            
             // POLUtils のバグ対策
             Regex regWrong = new Regex(@"([帶煟舆矓绡楰])");
             Match m;
@@ -63,9 +65,12 @@ namespace JPIDConv
             fixTable.Add("楰", "陰");
             // fixTable.Add("", "飲");
             //fixTable.Add("諄", "髄");
+
+            if (isFFXIInstalled)
+                fileName = PlayOnline.FFXI.FFXI.GetFilePath(0, rom, file_id);
             Console.WriteLine("データベース読み込み中... RomID: {0}, FileID: {1}", rom, file_id);
 
-            if (File.GetLastWriteTime(cache_name) < File.GetLastWriteTime(fileName))
+            if (isFFXIInstalled && File.GetLastWriteTime(cache_name) < File.GetLastWriteTime(fileName))
             {
                 PlayOnline.FFXI.FileTypes.ItemData itemdata = new PlayOnline.FFXI.FileTypes.ItemData();
                 PlayOnline.FFXI.ThingList things = itemdata.Load(fileName);
@@ -78,7 +83,7 @@ namespace JPIDConv
                     {
                         string old = m.Groups[1].Value;
                         string rep = (string)fixTable[old];                        
-                        Console.WriteLine("  Wrong char deteced in \"{0}\" : {1} -> {2}", name, old, rep);
+                        // Console.WriteLine(" D: Wrong char deteced in \"{0}\" : {1} -> {2}", name, old, rep);
                         name = name.Replace(old, rep);
                     }
 
@@ -89,6 +94,14 @@ namespace JPIDConv
                 sw.Flush();
                 sw.Close();
             }
+            else if (!isFFXIInstalled && !File.Exists(cache_name))
+            {
+                Console.WriteLine("E: FFXIがインストールされておらず、キャッシュファイルもありません。");
+                Console.WriteLine("終了します...");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
+
             sr = new StreamReader(cache_name);
             while (!sr.EndOfStream)
             {
@@ -164,11 +177,12 @@ namespace JPIDConv
 
         public Converter()
         {
-            path = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            CurrentPath = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
 
             // 必要 (初期化？)
-            PlayOnline.Core.POL.GetApplicationPath(PlayOnline.Core.AppID.FFXI,
-                        PlayOnline.Core.POL.Region.Japan);
+            if (PlayOnline.Core.POL.GetApplicationPath(PlayOnline.Core.AppID.FFXI,
+                        PlayOnline.Core.POL.Region.Japan) == null)
+                isFFXIInstalled = false;
         }
 
         public void Run()
@@ -181,7 +195,7 @@ namespace JPIDConv
             loadDat(NameId, 0, 7, true);
 
             // JP to ID
-            foreach (string xml in Directory.GetFiles(path, "*_jp.xml"))
+            foreach (string xml in Directory.GetFiles(CurrentPath, "*_jp.xml"))
             {
                 string dst = xml.Replace("_jp.xml", ".xml");
                 if (File.Exists(dst) && File.GetLastWriteTime(dst) > File.GetLastWriteTime(xml))
@@ -193,7 +207,7 @@ namespace JPIDConv
             }
 
             // EN to JP
-            xmls = Directory.GetFiles(path, "*_en.xml");
+            xmls = Directory.GetFiles(CurrentPath, "*_en.xml");
             if (xmls.Length > 0)
             {
                 Hashtable NameIdEn = new Hashtable();
