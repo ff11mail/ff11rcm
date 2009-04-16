@@ -155,6 +155,16 @@ namespace FFXI.XIACE
         }
 
         /// <summary>
+        /// サッチェルアイテム取得
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public InventoryItem GetSatchelItem(short index)
+        {
+            return _GetInventoryItem(index, OFFSET.SATCHEL_INFO);
+        }
+
+        /// <summary>
         /// 装備アイテム名取得
         /// </summary>
         /// <param name="slot"></param>
@@ -234,6 +244,16 @@ namespace FFXI.XIACE
         {
             return GetMaxCount((int)pol.BaseAddress + (int)OFFSET.INVENTORY_MAX + 4);
         }
+
+        /// <summary>
+        /// サッチェル最大
+        /// </summary>
+        /// <returns></returns>
+        public int GetSatchelMax()
+        {
+            return GetMaxCount((int)pol.BaseAddress + (int)OFFSET.INVENTORY_MAX + 5);
+        }
+
 
         /// <summary>
         /// カバンにある特定アイテムの数の取得

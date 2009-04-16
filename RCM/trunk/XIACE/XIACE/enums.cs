@@ -27,7 +27,7 @@ namespace FFXI.XIACE
         TARGET_INFO = 0x4d992c,  // 
         PLAYER_INFO = 0x57e9c6, // 名前,HPMPTP,エリアなど (FIX: 2009.04.09)
         JOB_INFO = 0x3eeff0, // ジョブ情報(FIX: 2009.04.09)
-        MAXHPMP_INFO = 0xd43a78, // なんか適当 (FIX: 2009.04.09)
+        MAXHPMP_INFO = 0x3eefe8, // なんか適当 (FIXME: 2009.04.09) 
         ACTIVITY_INFO = 0x53d1a0,  // 行動状態 enum Activity を参照 (FIX: 2009.04.09)
         BUFFS_INFO = 0x1ca70c, // 各種ステータス状態アイコン (FIX: 2009.04.09)
         FISH_INFO = 0x3f15e0, // 釣り(uncomfirmed FIX: 2009.04.09)
@@ -35,7 +35,8 @@ namespace FFXI.XIACE
         INVENTORY_INFO = 0x8d5250, // かばん (FIX: 2009.04.09)
         SAFEBOX_INFO = INVENTORY_INFO + (81 * 0x2c), // 金庫 (FIX: 2009.04.09)
         STORAGE_INFO = SAFEBOX_INFO + (81 * 0x2c), // 収納 (FIX: 2009.04.09)
-        LOCKER_INFO = STORAGE_INFO + (81 * 0x2c), // ロッカー (FIX: 2009.04.09)
+        LOCKER_INFO = STORAGE_INFO + (162 * 0x2c), // ロッカー (FIX: 2009.04.09)
+        SATCHEL_INFO = LOCKER_INFO + (81 * 0x2c), // サッチェル (Added: 2009.04.09)
         ITEM_INFO = 0x52d230, // アイテム (maybe FIX: 2009.04.09)
         INVENTORY_COUNT = 0x583f98, // カバン所持数 (+ 0x24 size 1) (maybe FIX: 2009.04.09)
         INVENTORY_MAX = 0x8dab3d, // カバンMAX (maybe FIX: 2009.04.09)
