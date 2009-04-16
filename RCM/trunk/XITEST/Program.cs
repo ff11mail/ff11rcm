@@ -110,13 +110,18 @@ namespace XITEST
                 Console.WriteLine(" {0,2:D2}: {1:X4} {2} x{3}", i, (int)item.id, String.IsNullOrEmpty(name) ? "EMPTY" : name, item.count);
             }
             Pause();
-            Console.WriteLine("Locker: {0}", inventory.GetLockerMax());
-            for (short i = 0; i < inventory.GetLockerMax(); i++)
+            if (inventory.GetLockerMax() < 0)
+                Console.WriteLine("Locker: Disabled");
+            else
             {
-                string name;
-                Inventory.InventoryItem item = inventory.GetLockerItem(i);
-                name = inventory.GetItemNameById(item.id);
-                Console.WriteLine(" {0,2:D2}: {1:X4} {2} x{3}", i, (int)item.id, String.IsNullOrEmpty(name) ? "EMPTY" : name, item.count);
+                Console.WriteLine("Locker: {0}", inventory.GetLockerMax());
+                for (short i = 0; i < inventory.GetLockerMax(); i++)
+                {
+                    string name;
+                    Inventory.InventoryItem item = inventory.GetLockerItem(i);
+                    name = inventory.GetItemNameById(item.id);
+                    Console.WriteLine(" {0,2:D2}: {1:X4} {2} x{3}", i, (int)item.id, String.IsNullOrEmpty(name) ? "EMPTY" : name, item.count);
+                }
             }
             Console.WriteLine();
         }
