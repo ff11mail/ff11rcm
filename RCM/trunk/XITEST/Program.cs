@@ -123,6 +123,20 @@ namespace XITEST
                     Console.WriteLine(" {0,2:D2}: {1:X4} {2} x{3}", i, (int)item.id, String.IsNullOrEmpty(name) ? "EMPTY" : name, item.count);
                 }
             }
+            Pause();
+            if (inventory.GetSatchelMax() < 0)
+                Console.WriteLine("Satchel: Disabled");
+            else
+            {
+                Console.WriteLine("Satchel: {0}", inventory.GetSatchelMax());
+                for (short i = 0; i < inventory.GetSatchelMax(); i++)
+                {
+                    string name;
+                    Inventory.InventoryItem item = inventory.GetSatchelItem(i);
+                    name = inventory.GetItemNameById(item.id);
+                    Console.WriteLine(" {0,2:D2}: {1:X4} {2} x{3}", i, (int)item.id, String.IsNullOrEmpty(name) ? "EMPTY" : name, item.count);
+                }
+            }
             Console.WriteLine();
         }
 
