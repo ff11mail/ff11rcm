@@ -30,10 +30,12 @@ using System.Runtime.InteropServices;
 
 namespace FFXI.XIACE
 {
+
+    [StructLayout(LayoutKind.Sequential,Pack = 1)]
     unsafe internal struct PlayerStatus
     {
         internal fixed byte name[20];
-        internal fixed byte unknown[12];
+        internal fixed byte unknown[10];
         internal int HP;
         internal int MP;
         internal int TP;
@@ -102,7 +104,7 @@ namespace FFXI.XIACE
         }
 
         /// <summary>
-        /// ステータスエフェクトを取得(addr+644なんとかならんかな)
+        /// ステータスエフェクトを取得
         /// </summary>
         unsafe private void ReadBuffs()
         {
@@ -117,7 +119,7 @@ namespace FFXI.XIACE
 
         unsafe private string ReadName()
         {
-            int count = 20;
+            int count = 18;
             byte[] name = new byte[count];
             Read();
             fixed (byte* src = stat.name, dst = name)
