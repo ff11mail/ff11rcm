@@ -273,6 +273,7 @@ namespace FFXI.XIACE
                 ReadJob(); return job.ExpNext;
             }
         }
+
         unsafe public bool isBuffed(eBuff buff)
         {
             ReadBuffs();

@@ -57,7 +57,7 @@ namespace FFXI.XIACE
         {
             int pos;
             int off = (int)OFFSET.EQUIP_INFO + ((int)slot * 8) + 4;
-            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + off), &pos, 4, null);
+            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + off), &pos, 8, null);
             return (pos - 1);
         }
 
@@ -191,22 +191,22 @@ namespace FFXI.XIACE
             int ptr;
             byte count;
             MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + OFFSET.INVENTORY_COUNT), &ptr, 4, null);
-            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)(ptr + 0x20), &count, 1, null);
+            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)(ptr + 0x24), &count, 1, null);
             return (byte)(count - 1);
         }
 
-        unsafe private byte GetMaxCount(int offset)
+        unsafe private int GetMaxCount(int offset)
         {
             byte count;
             MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)offset, &count, 1, null);
-            return (byte)(count-1);        	
+            return (int)(count-1);        	
         }
 
         /// <summary>
         /// カバンアイテム最大数の取得
         /// </summary>
         /// <returns></returns>
-        public byte GetInventoryMax()
+        public int GetInventoryMax()
         {
         	return GetMaxCount((int)pol.BaseAddress + (int)OFFSET.INVENTORY_MAX);
         }
@@ -214,7 +214,7 @@ namespace FFXI.XIACE
         /// 金庫最大
         /// </summary>
         /// <returns></returns>
-        public byte GetSafeboxMax()
+        public int GetSafeboxMax()
         {
             return GetMaxCount((int)pol.BaseAddress + (int)OFFSET.INVENTORY_MAX + 1);
         }
@@ -222,7 +222,7 @@ namespace FFXI.XIACE
         /// 収納最大
         /// </summary>
         /// <returns></returns>
-        public byte GetStorageMax()
+        public int GetStorageMax()
         {
             return GetMaxCount((int)pol.BaseAddress + (int)OFFSET.INVENTORY_MAX + 2);
         }
@@ -230,7 +230,7 @@ namespace FFXI.XIACE
         /// ロッカー最大
         /// </summary>
         /// <returns></returns>
-        public byte GetLockerMax()
+        public int GetLockerMax()
         {
             return GetMaxCount((int)pol.BaseAddress + (int)OFFSET.INVENTORY_MAX + 4);
         }
