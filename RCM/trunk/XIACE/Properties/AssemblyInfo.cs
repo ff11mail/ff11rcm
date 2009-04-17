@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
 [assembly: AssemblyTitle("XIACE")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("http://ff11rcm.googlecode.com/")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("XIACE")]
-[assembly: AssemblyCopyright("Copyright ©  2008")]
+[assembly: AssemblyCopyright("Copyright ©  2009 FFXI RCM Project.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
