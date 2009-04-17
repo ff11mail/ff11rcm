@@ -1,5 +1,5 @@
 ﻿/* WindowerHelper wrapper class.
- * Copyright (C) 2008 FFXI RCM Project <ff11rcm@gmail.com>
+ * Copyright (C) 2009 FFXI RCM Project <ff11rcm@gmail.com>
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 
