@@ -1,5 +1,5 @@
 ﻿/* WindowerHelper wrapper class.
- * Copyright (C) 2008 FFXI RCM Project <ff11rcm@gmail.com>
+ * Copyright (C) 2009 FFXI RCM Project <ff11rcm@gmail.com>
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -98,6 +97,16 @@ namespace FFXI
         }
 
         /// <summary>
+        /// キー押下を送信
+        /// </summary>
+        /// <param name="code">KeyCode</param>
+        /// <param name="down">true: down, false: up</param>
+        public void KeyDown(WindowerHelper.KeyCode code, bool down)
+        {
+            WindowerHelper.CKHSetKey(_KeyboardHelper, Convert.ToByte(code), down);
+        }
+
+        /// <summary>
         /// キーストロークを送信
         /// </summary>
         /// <param name="code">キーコード</param>
@@ -128,6 +137,15 @@ namespace FFXI
                 }
             }
             return Encoding.Default.GetString(buffer, 0, len);
+        }
+
+        /// <summary>
+        /// コンソールコマンドの引数の数を取得
+        /// </summary>
+        /// <returns></returns>
+        public int ConsoleGetArgCount()
+        {
+           return WindowerHelper.CCHGetArgCount(_ConsoleHelper);
         }
     }
 }
