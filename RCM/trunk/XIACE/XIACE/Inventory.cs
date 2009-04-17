@@ -56,7 +56,7 @@ namespace FFXI.XIACE
         {
             int pos;
             int off = (int)OFFSET.EQUIP_INFO + ((int)slot * 8) + 4;
-            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + off), &pos, 8, null);
+            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + off), &pos, 4, null);
             return (pos - 1);
         }
 
