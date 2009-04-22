@@ -29,11 +29,15 @@ namespace FFXI.XIACE
     {
         private PolProcess pol;
 
-        public struct InventoryItem
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        unsafe public struct InventoryItem
         {
-            public short id;
-            public short order;
-            public byte count;
+            public ushort id;      //2
+            public ushort order;   //4
+            public uint count;   //8
+            public uint flag;    //12
+            public uint _unknown;   //16
+            public ushort extraCount; // 18
         }
 
         public Inventory(Process proc)
@@ -68,17 +72,22 @@ namespace FFXI.XIACE
         /// <returns>InventoryItem 構造体</returns>
         unsafe private InventoryItem _GetInventoryItem (short index, OFFSET offset)
         {
-            short id;
-            short order;
-            byte count;
             int off = (int)offset + index * 0x2c;
+            /* short id;
+            short order;
+            int count;
+            int extra;
+            int flag;
             MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + off), &id, 2, null);
             MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + off + 2), &order, 2, null);
-            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + off + 4), &count, 1, null);
+            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + off + 4), &count, 4, null);
+            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + off + 8), &flag, 4, null);
+            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + off + 16), &extra, 4, null);
+
+             */
             InventoryItem item = new InventoryItem();
-            item.id = id;
-            item.order = order;
-            item.count = count;
+            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + off), &item, 18, null);
+            
             return item;
         }
 
@@ -87,7 +96,7 @@ namespace FFXI.XIACE
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        unsafe public string GetItemNameById(short id)
+        unsafe public string GetItemNameById(ushort id)
         {
             byte[] name = new byte[32];
             short sid;
@@ -253,16 +262,26 @@ namespace FFXI.XIACE
             return GetMaxCount((int)pol.BaseAddress + (int)OFFSET.INVENTORY_MAX + 5);
         }
 
-
         /// <summary>
         /// カバンにある特定アイテムの数の取得
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public byte GetItemCountByIndex(short index)
+        public uint GetItemCountByIndex(short index)
         {
             InventoryItem item = _GetInventoryItem(index, OFFSET.INVENTORY_INFO);
             return item.count;
+        }
+
+        /// <summary>
+        /// カバンにある特定アイテムのExtraカウント(WSPointなど)取得
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public int GetExtraCountByIndex(short index)
+        {
+            InventoryItem item = _GetInventoryItem(index, OFFSET.INVENTORY_INFO);
+            return item.extraCount;
         }
     }
 }
