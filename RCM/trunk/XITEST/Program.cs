@@ -100,6 +100,20 @@ namespace XITEST
             Console.WriteLine();
         }
 
+        static void print_item_data(Inventory.InventoryItem item, string name)
+        {
+            if (item.id > 0)
+            {
+                Console.WriteLine(" {0,2:D2} {1:X4} {2} x{3} (FLAG: 0x{4:X4}) (Extra: {5})",
+                    item.order, (int)item.id, String.IsNullOrEmpty(name) ? "UNKNWON" : name,
+                    item.count, item.flag, item.extraCount);
+            }
+            else
+            {
+                Console.WriteLine(" {0,2:D2} ---- ", item.order);
+            }
+        }
+
         static void CheckInventory(FFXI.XIACE.Inventory inventory)
         {
             Console.WriteLine("== Checking Inventory Class ==");
@@ -109,7 +123,7 @@ namespace XITEST
                 string name;
                 Inventory.InventoryItem item = inventory.GetInventoryItem(i);
                 name = inventory.GetItemNameById(item.id);
-                Console.WriteLine(" {0,2:D2} {1:X4} {2} x{3}", i, (int)item.id, String.IsNullOrEmpty(name) ? "EMPTY" : name, item.count);
+                print_item_data(item, name);
             }
             Pause();
             Console.WriteLine("Safebox: {0}", inventory.GetSafeboxMax());
@@ -118,7 +132,7 @@ namespace XITEST
                 string name;
                 Inventory.InventoryItem item = inventory.GetSafeboxItem(i);
                 name = inventory.GetItemNameById(item.id);
-                Console.WriteLine(" {0,2:D2}: {1:X4} {2} x{3}", i, (int)item.id, String.IsNullOrEmpty(name) ? "EMPTY" : name, item.count);
+                print_item_data(item, name);
             }
             Pause();
             Console.WriteLine("Storage: {0}", inventory.GetStorageMax());
@@ -127,7 +141,7 @@ namespace XITEST
                 string name;
                 Inventory.InventoryItem item = inventory.GetStorageItem(i);
                 name = inventory.GetItemNameById(item.id);
-                Console.WriteLine(" {0,2:D2}: {1:X4} {2} x{3}", i, (int)item.id, String.IsNullOrEmpty(name) ? "EMPTY" : name, item.count);
+                print_item_data(item, name);
             }
             Pause();
             if (inventory.GetLockerMax() < 0)
@@ -140,7 +154,7 @@ namespace XITEST
                     string name;
                     Inventory.InventoryItem item = inventory.GetLockerItem(i);
                     name = inventory.GetItemNameById(item.id);
-                    Console.WriteLine(" {0,2:D2}: {1:X4} {2} x{3}", i, (int)item.id, String.IsNullOrEmpty(name) ? "EMPTY" : name, item.count);
+                    print_item_data(item, name);
                 }
             }
             Pause();
@@ -154,7 +168,7 @@ namespace XITEST
                     string name;
                     Inventory.InventoryItem item = inventory.GetSatchelItem(i);
                     name = inventory.GetItemNameById(item.id);
-                    Console.WriteLine(" {0,2:D2}: {1:X4} {2} x{3}", i, (int)item.id, String.IsNullOrEmpty(name) ? "EMPTY" : name, item.count);
+                    print_item_data(item, name);
                 }
             }
             Console.WriteLine();
@@ -172,6 +186,15 @@ namespace XITEST
                 c++;
             }
             Console.WriteLine("({0} buffs)", c);
+            Console.WriteLine();
+        }
+
+        static void CheckFishing(Fishing fishing)
+        {
+            Console.WriteLine("== Checking Fishing ==");
+            Console.WriteLine("Fish HP: {0}/{1}", fishing.GetFishHP(),fishing.GetFishMaxHP());
+            Console.WriteLine("Fish ID: {0} {1} {2} {3}", fishing.GetFishID1(), fishing.GetFishID2(), fishing.GetFishID3(), fishing.GetFishID4());
+            Console.WriteLine("Timeout: {0}", fishing.GetFishTimeout());
             Console.WriteLine();
         }
 
@@ -193,6 +216,8 @@ namespace XITEST
                 Finish("WindowerHelper.dll がないかも");
             }
             CheckPlayer(xiw.Player);
+            Pause();
+            CheckFishing(xiw.Fishing);
             Pause();
             CheckBuffs(xiw.Player);
             Pause();
