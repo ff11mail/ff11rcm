@@ -30,15 +30,15 @@ namespace XITEST
 {
     class Program
     {
-        static Process CheckFFXIRunning()
+        static PolProcess CheckFFXIRunning()
         {
-            Process p = Process.GetProcessesByName("pol")[0];
-            if (p == null) return null;
-            foreach (ProcessModule m in p.Modules)
+            PolProcess[] pp = XIACE.ListPolProcess();
+
+            foreach (PolProcess p in pp)
             {
-                if (m.ModuleName.Equals("FFXiMain.dll", StringComparison.OrdinalIgnoreCase))
+                if ((int)p.BaseAddress != 0)
                 {
-                    Console.WriteLine("POL.EXE Pid: {0}, Title: {1}, {2}: 0x{3:X}", p.Id, p.MainWindowTitle, m.ModuleName, (int)m.BaseAddress);
+                    Console.WriteLine("POL.EXE Pid: {0}, Title: {1}, FFXiMain: 0x{2:X}", p.Pid, p.Title, (int)p.BaseAddress);
                     return p;
                 }
             }
@@ -53,14 +53,17 @@ namespace XITEST
             Environment.Exit(0);
         }
 
-        static void Pause()
+        static bool Pause()
         {
             ConsoleKeyInfo cki;
             Console.Write("何かキーを押すと続けます... (ESCで終了)");
             cki = Console.ReadKey();
             if (cki.Key == ConsoleKey.Escape)
-                Environment.Exit(0);
+            {
+                return false;
+            }
             Console.WriteLine();
+            return true;
         }
 
         static void CheckPlayer(FFXI.XIACE.Player player)
@@ -198,34 +201,67 @@ namespace XITEST
             Console.WriteLine();
         }
 
+        static FFXI.TextObject WindowerTest(XIWindower xiw)
+        {
+            FFXI.TextObject to;
+            to = xiw.CreateTextObject("xitest");
+            to.SetLocation(50, 50);
+            to.SetBGColor(128, 0, 0, 0);
+            to.SetFontColor(255, 255, 255, 255);
+            to.SetText("This is XIACE Test Program");
+            to.SetBold(true);
+            to.SetItalic(true);
+            to.SetBGVisibilitiy(true);
+            to.Flush();
+            return to;
+        }
+
         static void Main(string[] args)
         {
-            Process p = CheckFFXIRunning();
+            PolProcess p = CheckFFXIRunning();
             XIWindower xiw = null;
-
+            FFXI.TextObject to;
             if (p == null)
             {
                 Finish("FFXi is not running.");
             }
             try
             {
-                xiw = new XIWindower(p.Id);
+                xiw = new XIWindower(p.Pid);
             }
             catch
             {
                 Finish("WindowerHelper.dll がないかも");
             }
+            to = WindowerTest(xiw);
             CheckPlayer(xiw.Player);
-            Pause();
+            if (Pause() == false)
+            {
+                to.Dispose();
+                Environment.Exit(0);
+            }
             CheckFishing(xiw.Fishing);
-            Pause();
+            if (Pause() == false)
+            {
+                to.Dispose();
+                Environment.Exit(0);
+            }
             CheckBuffs(xiw.Player);
-            Pause();
+            if (Pause() == false)
+            {
+                to.Dispose();
+                Environment.Exit(0);
+            }
             CheckEquipment(xiw.Inventory);
-            Pause();
+            if (Pause() == false)
+            {
+                to.Dispose();
+                Environment.Exit(0);
+            }
             CheckInventory(xiw.Inventory);
 
             Finish("== End of TEST ==");
+                to.Dispose();
         }
     }
 }
