@@ -30,13 +30,15 @@ namespace FFXI.XIACE
     /// <summary>
     /// POL プロセス情報
     /// </summary>
-    internal class PolProcess
+    public class PolProcess
     {
         private Process _Process;
         private IntPtr _BaseAddress;
 
         public IntPtr Handle { get { return _Process.Handle; } }
         public IntPtr BaseAddress { get { return _BaseAddress; } }
+        public string Title { get { return _Process.MainWindowTitle; } }
+        public int Pid { get { return _Process.Id; }  }
 
         public PolProcess(Process Proc)
         {
@@ -52,6 +54,27 @@ namespace FFXI.XIACE
         }        
     }
 
+    /// <summary>
+    /// スタティッククラス
+    /// </summary>
+    public static class XIACE
+    {
+        /// <summary>
+        /// Pol.EXEのプロセスリスト
+        /// </summary>
+        /// <returns></returns>
+        public static PolProcess[] ListPolProcess()
+        {
+            Process[] proc = Process.GetProcessesByName("pol");
+            PolProcess[] pol = new PolProcess[proc.Length];
+            for (int i = 0; i < proc.Length; i++)
+            {
+                pol[i] = new PolProcess(proc[i]);
+            }
+            return pol;
+        }
+    }
+         
     /// <summary>
     /// 実際にメモリにアクセスするスタティッククラス
     /// </summary>
