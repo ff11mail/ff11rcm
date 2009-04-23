@@ -72,6 +72,14 @@ namespace FFXI
         }
 
         /// <summary>
+        /// テキストヘルパ
+        /// </summary>
+        public int TextHelper
+        {
+            get { return _TextHelper; }
+        }
+
+        /// <summary>
         /// 新規コマンドかどうか (バグってるの常にtrue (つまり使えない))
         /// </summary>
         public bool IsNewCommand
@@ -146,6 +154,91 @@ namespace FFXI
         public int ConsoleGetArgCount()
         {
            return WindowerHelper.CCHGetArgCount(_ConsoleHelper);
+        }
+
+        /// <summary>
+        /// テキストオブジェクトを作成
+        /// </summary>
+        /// <param name="name">name of TEXT Object</param>
+        /// <returns>id of TEXT Object</returns>
+        public TextObject CreateTextObject(string name)
+        {
+            return new TextObject(this, name);
+        }
+    }
+
+    /// <summary>
+    /// テキストオブジェクトクラス
+    /// </summary>
+    public class TextObject
+    {
+        private Windower _Parent;
+        private string _Name;
+
+        public Windower Parent { get { return _Parent; } }
+        public string Name { get { return _Name; } }
+
+        public TextObject(Windower w, string name)
+        {
+            _Parent = w;
+            _Name = name;
+            WindowerHelper.CTHCreateTextObject(w.TextHelper, name);
+        }
+
+        public void SetText(string text)
+        {
+            WindowerHelper.CTHSetText(_Parent.TextHelper, _Name, text);
+        }
+
+        public void SetLocation(float x, float y)
+        {
+            WindowerHelper.CTHSetLocation(_Parent.TextHelper, _Name, x, y);
+        }
+
+        public void SetBold(bool bold)
+        {
+            WindowerHelper.CTHSetBold(_Parent.TextHelper, _Name, bold);
+        }
+
+        public void SetItalic(bool italic)
+        {
+            WindowerHelper.CTHSetItalic(_Parent.TextHelper, _Name, italic);
+        }
+
+        public void SetBGColor(byte Alpha, byte Red, byte Green, byte Blue)
+        {
+            WindowerHelper.CTHSetBGColor(_Parent.TextHelper, _Name, Alpha, Red, Green, Blue);
+        }
+
+        public void SetBGVisibilitiy(bool visible)
+        {
+            WindowerHelper.CTHSetBGVisibility(_Parent.TextHelper, _Name, visible);
+        }
+
+        public void SetFontColor(byte Alpha, byte Red, byte Green, byte Blue)
+        {
+            WindowerHelper.CTHSetColor(_Parent.TextHelper, _Name, Alpha, Red, Green, Blue);
+        }
+
+        public void SetVisibility(bool visible)
+        {
+            WindowerHelper.CTHSetVisibility(_Parent.TextHelper, _Name, visible);
+        }
+
+        ~TextObject()
+        {
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            WindowerHelper.CTHDeleteTextObject(_Parent.TextHelper, _Name);
+            Flush();
+        }
+
+        public void Flush()
+        {
+            WindowerHelper.CTHFlushCommands(_Parent.TextHelper);
         }
     }
 }
