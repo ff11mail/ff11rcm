@@ -81,6 +81,14 @@ namespace FFXI.XIACE
             Read();
         }
 
+        unsafe public bool isLoggedIn()
+        {
+            int val;
+            MemoryProvider.ReadProcessMemory(pol.Handle, (IntPtr)((int)pol.BaseAddress + OFFSET.LOGGED_IN), &val, 4, null);
+            if (val == 0) return true;
+            return false;
+        }
+
         unsafe private void Read()
         {
             PlayerStatus status = new PlayerStatus();

@@ -40,6 +40,8 @@ namespace FFXI.XIACE
         ITEM_INFO = 0x52d2b0, // アイテム (maybe FIX: 2009.04.22)
         INVENTORY_COUNT = 0x584018, // カバン所持数 (+ 0x24 size 1) (maybe FIX: 2009.04.22)
         INVENTORY_MAX = 0x8dabbd, // カバンMAX (maybe FIX: 2009.04.22)
+
+        LOGGED_IN = 0x585AE0, // ログインしてるかどうか(int, INで0 OUTで5075****)(2009.04.24)
     }
 
     /// <summary>
