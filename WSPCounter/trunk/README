@@ -1,3 +1,12 @@
 XIACE サンプル - 潜在武器WSポイントカウンタ
 
 ライセンス GPL
+
+仕様
+・ゲーム画面に描画します (WindowerHelper)
+・エリアチェンジ時に値が更新されます(FF11の仕様)
+・アイテム名は英語になります(WindowerHelperの仕様)
+・描画設定は保存されません(めんどくさい)
+
+Copyright (C) FF11 RCM Project 2009.
+
