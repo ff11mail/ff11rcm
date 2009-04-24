@@ -196,6 +196,11 @@
             this.numTextAlpha.Name = "numTextAlpha";
             this.numTextAlpha.Size = new System.Drawing.Size(43, 19);
             this.numTextAlpha.TabIndex = 12;
+            this.numTextAlpha.Value = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
             // 
             // timer1
             // 
